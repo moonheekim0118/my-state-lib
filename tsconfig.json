@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
+    "importHelpers": true,
     "lib": ["dom", "esnext"],
     "jsx": "react",
     "declaration": true,
