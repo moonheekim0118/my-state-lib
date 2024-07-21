@@ -1,4 +1,7 @@
+import { useSyncExternalStore } from "react";
+
 type Listener = () => void;
+type Selector<T, U> = (state: T) => U;
 
 class Store<T> {
   private state: T;
@@ -32,3 +35,21 @@ class Store<T> {
     this.listeners.forEach((listener) => listener());
   };
 }
+
+export const createStore = <T>(initialState: T) => {
+  const store = new Store<T>(initialState);
+
+  const useStore = <U>(
+    selector: Selector<T, U> = (state: T) => state as unknown as U
+  ): U => {
+    return useSyncExternalStore(store.subscribe, () =>
+      selector(store.getState())
+    );
+  };
+
+  return {
+    useStore,
+    getState: store.getState,
+    setState: store.setState,
+  };
+};
